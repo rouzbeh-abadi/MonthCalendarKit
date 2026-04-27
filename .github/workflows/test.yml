@@ -1,6 +1,11 @@
 # Runs the MonthCalendarKit XCTest suite on every push to main and on
 # every pull request. The package has no private dependencies, so no
 # SSH keys or repository secrets are required.
+#
+# We discover an iPhone simulator dynamically rather than hard-coding
+# a model name, because the GitHub Actions macOS runner image rotates
+# its preinstalled simulators with every Xcode update and a stale
+# `name=iPhone X` would silently break the workflow.
 
 name: Tests
 
@@ -34,11 +39,27 @@ jobs:
           xcodebuild -version
           swift --version
 
+      - name: Pick an available iPhone simulator
+        id: simulator
+        run: |
+          set -euo pipefail
+          DEVICE_ID=$(xcrun simctl list devices available \
+            | grep -oE 'iPhone [^()]*\([A-F0-9-]{36}\)' \
+            | head -1 \
+            | grep -oE '[A-F0-9-]{36}' || true)
+          if [ -z "$DEVICE_ID" ]; then
+            echo "::error::No iPhone simulator available on the runner"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Using simulator $DEVICE_ID"
+          echo "id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+
       - name: Run tests
         run: |
           set -o pipefail
           xcodebuild test \
             -scheme MonthCalendarKit \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
             -enableCodeCoverage YES \
             CODE_SIGNING_ALLOWED=NO
