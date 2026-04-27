@@ -1,5 +1,12 @@
 # MonthCalendarKit
 
+![MonthCalendarKit](Assets/hero.png)
+
+[![Tests](https://github.com/rouzbeh-abadi/MonthCalendarKit/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/rouzbeh-abadi/MonthCalendarKit/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Swift 6](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
+[![Platforms](https://img.shields.io/badge/platforms-iOS%2017%20%7C%20macOS%2014%20%7C%20visionOS%201-lightgrey.svg)](Package.swift)
+
 A small, theme-able monthly calendar grid for SwiftUI.
 
 `MonthCalendarKit` gives you a paged month view with custom-built
@@ -10,17 +17,17 @@ selection state.
 
 ## What's inside
 
-- **`MonthCalendarView<DayContent>`** &mdash; the public, generic
+- **`MonthCalendarView<DayContent>`**: the public, generic
   calendar view. Pass bindings for the displayed month and the
   selected day plus a builder for each cell.
-- **`CalendarDay`** &mdash; the descriptor passed into your day-cell
+- **`CalendarDay`**: the descriptor passed into your day-cell
   builder. Carries the date plus `isCurrentMonth`, `isToday` and
   `isSelected` flags.
-- **`PlainDayCell`** &mdash; minimal built-in cell that just shows
+- **`PlainDayCell`**: minimal built-in cell that just shows
   the day number with the today border and selected fill.
-- **`DotIndicatorDayCell`** &mdash; built-in cell that shows the
+- **`DotIndicatorDayCell`**: built-in cell that shows the
   day number plus up to three small status dots underneath.
-- **`MonthCalendarTheme`** &mdash; protocol for injecting your
+- **`MonthCalendarTheme`**: protocol for injecting your
   brand colors via `@Environment`. Defaults to system colors via
   `DefaultMonthCalendarTheme`.
 
@@ -77,11 +84,9 @@ chevrons plus a "Today" jump button. To supply your own chrome,
 pass `showsHeader: false`:
 
 ```swift
-MonthCalendarView(
-    month: $month,
-    selection: $selection,
-    showsHeader: false
-) { day in
+MonthCalendarView(month: $month,
+                  selection: $selection,
+                  showsHeader: false) { day in
     PlainDayCell(day: day)
 }
 ```
@@ -93,11 +98,9 @@ day number, sourced from a `[Color]` array the host computes:
 
 ```swift
 MonthCalendarView(month: $month, selection: $selection) { day in
-    DotIndicatorDayCell(
-        day: day,
-        dots: dots(for: day.date),
-        highlighted: hasContent(on: day.date)
-    )
+    DotIndicatorDayCell(day: day,
+                        dots: dots(for: day.date),
+                        highlighted: hasContent(on: day.date))
 }
 
 private func dots(for date: Date) -> [Color] {
@@ -188,3 +191,36 @@ xcodebuild test \
     -scheme MonthCalendarKit \
     -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
+
+## License
+
+MonthCalendarKit is released under the **MIT License**. The full license
+text is in [LICENSE](LICENSE); a summary follows.
+
+```text
+MIT License
+
+Copyright (c) 2026 Rouzbeh Abadi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+In short: you can use it commercially, modify it, distribute it, and ship
+it inside private projects. Just keep the copyright notice in any
+substantial copy.
